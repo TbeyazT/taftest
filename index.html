@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Screen Sharing Example</title>
+</head>
+<body>
+    <h1>Screen Sharing Example</h1>
+    <button id="startSharing">Start Sharing</button>
+    <button id="stopSharing" style="display: none;">Stop Sharing</button>
+    <div id="screenPreview"></div>
+
+    <script>
+        const startSharingButton = document.getElementById('startSharing');
+        const stopSharingButton = document.getElementById('stopSharing');
+        const screenPreview = document.getElementById('screenPreview');
+        let mediaStream = null;
+
+        startSharingButton.addEventListener('click', async () => {
+            try {
+                // Request access to screen sharing
+                mediaStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+                
+                // Display the screen sharing stream in a video element
+                screenPreview.srcObject = mediaStream;
+
+                // Show the "Stop Sharing" button
+                startSharingButton.style.display = 'none';
+                stopSharingButton.style.display = 'inline';
+            } catch (error) {
+                console.error('Error accessing screen sharing:', error);
+            }
+        });
+
+        stopSharingButton.addEventListener('click', () => {
+            // Stop sharing the screen
+            mediaStream.getTracks().forEach(track => track.stop());
+            
+            // Clear the screen sharing preview
+            screenPreview.srcObject = null;
+
+            // Show the "Start Sharing" button
+            startSharingButton.style.display = 'inline';
+            stopSharingButton.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
